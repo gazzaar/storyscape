@@ -1,22 +1,27 @@
 import express, { ErrorRequestHandler } from 'express';
 import cors from 'cors';
 import { createPostHandler, listPostsHandler } from './handlers/postHandler';
-const app = express();
+import { initDB } from './datastore';
 
-app.use(express.json());
-app.use(cors());
+(async () => {
+  await initDB();
+  const app = express();
 
-app.get('/posts', listPostsHandler);
+  app.use(express.json());
+  app.use(cors());
 
-app.post('/posts', createPostHandler);
+  app.get('/posts', listPostsHandler);
 
-const errHandler: ErrorRequestHandler = (err, _req, res, _next) => {
-  console.error('Uncought Error', err);
-  return res
-    .status(500)
-    .send('Oops, an unExpected Error happend, please try again');
-};
+  app.post('/posts', createPostHandler);
 
-app.use(errHandler);
+  const errHandler: ErrorRequestHandler = (err, _req, res, _next) => {
+    console.error('Uncought Error', err);
+    return res
+      .status(500)
+      .send('Oops, an unExpected Error happend, please try again');
+  };
 
-app.listen(3000);
+  app.use(errHandler);
+
+  app.listen(3000);
+})();
