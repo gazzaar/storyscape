@@ -14,12 +14,18 @@ export interface GetPostResponse {
 }
 
 export type SignUpRequest = Omit<User, 'id'>;
-export interface SignUpResponse {}
+export interface SignUpResponse {
+  jwt: string;
+}
 
 export interface SignInRequest {
   login: string; // username or email
   password: string;
 }
 
-export type SignInResponse = Omit<User, 'password'>;
+export type SignInResponse = {
+  user: Omit<User, 'password'>;
+  jwt: string;
+};
+
 // TODO: Comment APIs

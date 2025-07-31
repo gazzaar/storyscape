@@ -24,4 +24,14 @@ export interface Comment {
   userID: string;
 }
 
-export type ExpressHandler<req, res> = RequestHandler<string, Partial<res>, Partial<req>>;
+type WithError<T> = T & { error: string };
+
+export type ExpressHandler<req, res> = RequestHandler<
+  string,
+  Partial<WithError<res>>,
+  Partial<req>
+>;
+
+export interface JwtObject {
+  userId: string;
+}
