@@ -6,6 +6,7 @@ import { signInHandler, signUpHandler } from './handlers/authHandler';
 import { requestloggerMiddleware } from './middleware/loggerMiddleware';
 import { errHandler } from './middleware/errorMiddleware';
 import dotenv from 'dotenv';
+import { authMiddleware } from './middleware/authMiddleware';
 
 (async () => {
   await initDB();
@@ -16,13 +17,15 @@ import dotenv from 'dotenv';
   app.use(cors());
   app.use(requestloggerMiddleware);
 
-  app.get('/posts', listPostsHandler);
-
-  app.post('/posts', createPostHandler);
-
-  // app.get('/signUp', signUpHandler);
+  // Public
   app.post('/signup', signUpHandler);
   app.post('/signin', signInHandler);
+
+  app.use(authMiddleware);
+
+  // protected
+  app.get('/posts', listPostsHandler);
+  app.post('/posts', createPostHandler);
 
   app.use(errHandler);
 
