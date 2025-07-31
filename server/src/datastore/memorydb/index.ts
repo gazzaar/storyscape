@@ -26,11 +26,11 @@ export class inMemoryDB implements Datastore {
     this.posts.push(post);
   }
 
-  getPost(id: number): Post | undefined {
+  getPost(id: string): Post | undefined {
     return this.posts.find((post) => post.id === id);
   }
 
-  deletePost(id: number): void {
+  deletePost(id: string): void {
     const index = this.posts.findIndex((p) => p.id === id);
     if (index === -1) {
       return;
@@ -38,7 +38,7 @@ export class inMemoryDB implements Datastore {
     this.posts.splice(index, 1);
   }
 
-  listComments(postId: number): Comment[] {
+  listComments(postId: string): Comment[] {
     return this.comments.filter((p) => p.id === postId);
   }
 
@@ -46,7 +46,7 @@ export class inMemoryDB implements Datastore {
     this.comments.push(comment);
   }
 
-  deleteComment(id: number): void {
+  deleteComment(id: string): void {
     const index = this.posts.findIndex((p) => p.id === id);
     if (index === -1) {
       return;

@@ -1,11 +1,12 @@
 import express from 'express';
+import cors from 'cors';
+import { createPostHandler, listPostsHandler } from './handlers/postHandler';
 const app = express();
 
-app.get('/posts', (req, res) => {
-  res.send('Hello from blog api');
-  res.end();
-});
+app.use(express.json());
+app.use(cors());
 
-app.listen(3000, (err) => {
-  console.log('server started');
-});
+app.get('/posts', listPostsHandler);
+
+app.post('/posts', createPostHandler);
+app.listen(3000);
