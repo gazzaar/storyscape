@@ -1,23 +1,31 @@
+import { RequestHandler } from 'express';
+
 export interface User {
-  id: Number;
+  id: string;
   username: String;
   password: String;
   email: String;
 }
 
 export interface Post {
-  id: Number;
+  id: string;
   title: String;
   message: String;
-  createdAt: String;
-  published: Boolean;
-  userID: Number;
+  createdAt: number;
+  published: Boolean | undefined;
+  userID: string;
 }
 
 export interface Comment {
-  id: Number;
+  id: string;
   comment: String;
-  createdAt: String;
-  postID: Number;
-  userID: Number;
+  createdAt: number;
+  postID: string;
+  userID: string;
 }
+
+export type ExpressHandler<req, res> = RequestHandler<
+  string,
+  Partial<res>,
+  Partial<req>
+>;
