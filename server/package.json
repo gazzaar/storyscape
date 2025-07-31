@@ -4,7 +4,7 @@
   "main": "src/index.js",
   "scripts": {
     "build": "npm i && tsc",
-    "start": "nodemon src/index.ts"
+    "start": "nodemon server.ts"
   },
   "keywords": [],
   "author": "",
