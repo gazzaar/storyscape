@@ -13,7 +13,7 @@ We'll use a relational database to fast retrieval of posts and comments
 **User:**
 | Column | Typt|
 | ------ | -------- |
-| ID | Integer |
+| ID | String|
 | username| String|
 | password| String |
 |email|string|
@@ -22,22 +22,22 @@ We'll use a relational database to fast retrieval of posts and comments
 
 | Columnt    | Type      |
 | ---------- | --------- |
-| ID         | Integer   |
+| ID         | String    |
 | title      | String    |
 | message    | Text      |
 | created_at | timestamp |
 | published  | Boolean   |
-| userID     | user.id   |
+| userID     | String    |
 
 **Comment:**
 
 | Columnt      | Type      |
 | ------------ | --------- |
-| ID           | Integer   |
+| ID           | String    |
 | created_at   | timestamp |
 | comment_text | Text      |
-| postID       | Post.id   |
-| userID       | user.id   |
+| postID       | string    |
+| userID       | String    |
 
 ## Server
 
