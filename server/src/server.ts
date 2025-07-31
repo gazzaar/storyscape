@@ -1,8 +1,10 @@
-import express, { ErrorRequestHandler } from 'express';
+import express from 'express';
 import cors from 'cors';
 import { createPostHandler, listPostsHandler } from './handlers/postHandler';
 import { initDB } from './datastore';
-import { signInHandler, signUpHandler } from './handlers/userHandler';
+import { signInHandler, signUpHandler } from './handlers/authHandler';
+import { requestloggerMiddleware } from './middleware/loggerMiddleware';
+import { errHandler } from './middleware/errorMiddleware';
 
 (async () => {
   await initDB();
@@ -10,6 +12,7 @@ import { signInHandler, signUpHandler } from './handlers/userHandler';
 
   app.use(express.json());
   app.use(cors());
+  app.use(requestloggerMiddleware);
 
   app.get('/posts', listPostsHandler);
 
@@ -18,11 +21,6 @@ import { signInHandler, signUpHandler } from './handlers/userHandler';
   // app.get('/signUp', signUpHandler);
   app.post('/signup', signUpHandler);
   app.post('/signin', signInHandler);
-
-  const errHandler: ErrorRequestHandler = (err, _req, res, _next) => {
-    console.error('Uncought Error', err);
-    return res.status(500).send('Oops, an unExpected Error happend, please try again');
-  };
 
   app.use(errHandler);
 
