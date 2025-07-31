@@ -14,7 +14,12 @@ export const createPostHandler: ExpressHandler<
   CreatePostRequest,
   CreatePostResponse
 > = (req, res) => {
-  if (!req.body.title || !req.body.message || !req.body.userID) {
+  if (
+    !req.body.title ||
+    !req.body.message ||
+    !req.body.userID ||
+    !req.body.published
+  ) {
     return res.sendStatus(400);
   }
 

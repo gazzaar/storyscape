@@ -12,7 +12,7 @@ export interface Post {
   title: String;
   message: String;
   createdAt: number;
-  published: Boolean | undefined;
+  published: Boolean;
   userID: string;
 }
 
