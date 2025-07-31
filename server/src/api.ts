@@ -1,4 +1,4 @@
-import { Post } from './types';
+import { Post, User } from './types';
 
 // Post APIs
 export interface ListPostRequest {}
@@ -13,5 +13,13 @@ export interface GetPostResponse {
   post: Post;
 }
 
-// TODO: User APIs
+export type SignUpRequest = Omit<User, 'id'>;
+export interface SignUpResponse {}
+
+export interface SignInRequest {
+  login: string; // username or email
+  password: string;
+}
+
+export type SignInResponse = Omit<User, 'password'>;
 // TODO: Comment APIs
