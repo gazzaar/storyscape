@@ -6,17 +6,21 @@ export class inMemoryDB implements Datastore {
   private comments: Comment[] = [];
   private posts: Post[] = [];
 
-  async creatUser(user: User): Promise<void> {
+  async createUser(user: User): Promise<void> {
     this.users.push(user);
     return Promise.resolve();
   }
 
   getUserByEmail(email: string): Promise<User | undefined> {
-    return Promise.resolve(this.users.find((u) => u.email === email));
+    return Promise.resolve(this.users.find(u => u.email === email));
   }
 
   getUserByUsername(username: string): Promise<User | undefined> {
-    return Promise.resolve(this.users.find((u) => u.username === username));
+    return Promise.resolve(this.users.find(u => u.username === username));
+  }
+
+  getUserById(id: string): Promise<User | undefined> {
+    return Promise.resolve(this.users.find(u => u.id === id));
   }
 
   listPosts(): Promise<Post[]> {
@@ -30,11 +34,11 @@ export class inMemoryDB implements Datastore {
   }
 
   getPost(id: string): Promise<Post | undefined> {
-    return Promise.resolve(this.posts.find((post) => post.id === id));
+    return Promise.resolve(this.posts.find(post => post.id === id));
   }
 
   deletePost(id: string): Promise<void> {
-    const index = this.posts.findIndex((p) => p.id === id);
+    const index = this.posts.findIndex(p => p.id === id);
     if (index === -1) {
       return Promise.resolve();
     }
@@ -44,7 +48,7 @@ export class inMemoryDB implements Datastore {
   }
 
   listComments(postId: string): Promise<Comment[]> {
-    return Promise.resolve(this.comments.filter((p) => p.id === postId));
+    return Promise.resolve(this.comments.filter(p => p.id === postId));
   }
 
   addComment(comment: Comment): Promise<void> {
@@ -54,7 +58,7 @@ export class inMemoryDB implements Datastore {
   }
 
   deleteComment(id: string): Promise<void> {
-    const index = this.posts.findIndex((p) => p.id === id);
+    const index = this.posts.findIndex(p => p.id === id);
     if (index === -1) {
       return Promise.resolve();
     }
