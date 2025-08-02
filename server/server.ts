@@ -7,6 +7,7 @@ import { requestloggerMiddleware } from './middleware/loggerMiddleware';
 import { errHandler } from './middleware/errorMiddleware';
 import dotenv from 'dotenv';
 import { authMiddleware } from './middleware/authMiddleware';
+import { createCommentHandler, listCommentsHandler } from './handlers/commentHandler';
 
 (async () => {
   await initDB();
@@ -18,6 +19,7 @@ import { authMiddleware } from './middleware/authMiddleware';
   app.use(requestloggerMiddleware);
 
   // Public
+  app.get('/healthz', (req, res) => res.send({ status: 'OK' }));
   app.post('/signup', signUpHandler);
   app.post('/signin', signInHandler);
 
@@ -27,6 +29,9 @@ import { authMiddleware } from './middleware/authMiddleware';
   app.get('/posts', listPostsHandler);
   app.post('/posts', createPostHandler);
 
+  // Comments
+  app.get('/comments/:postId', listCommentsHandler);
+  app.post('/comments/:postId', createCommentHandler);
   app.use(errHandler);
 
   app.listen(3000);

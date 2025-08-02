@@ -1,4 +1,4 @@
-import { Post, User } from './types';
+import { Post, User, Comment } from './types';
 
 // Post APIs
 export interface ListPostRequest {}
@@ -28,4 +28,12 @@ export type SignInResponse = {
   jwt: string;
 };
 
-// TODO: Comment APIs
+export interface ListCommentsRequest {}
+
+export interface ListCommentsResponse {
+  comments: Comment[];
+}
+
+export type CreateCommentRequest = Pick<Comment, 'comment'>;
+
+export interface CreateCommentResponse {}

@@ -59,17 +59,33 @@ export class SqlDataStore implements Datastore {
     );
   }
 
-  getPost(id: string): Promise<Post | undefined> {
-    throw new Error('Method not implemented.');
+  async getPost(id: string): Promise<Post | undefined> {
+    return await this.db.get<Post>(
+      `
+        SELECT 1 FROM  posts WHERE id = ?`,
+      id
+    );
   }
   deletePost(id: string): Promise<void> {
     throw new Error('Method not implemented.');
   }
+
   listComments(postId: string): Promise<Comment[]> {
-    throw new Error('Method not implemented.');
+    return this.db.all<Comment[]>(
+      `SELECT * FROM comments WHERE postID = ? ORDER BY createdAT DESC`,
+      postId
+    );
   }
-  addComment(comment: Comment): Promise<void> {
-    throw new Error('Method not implemented.');
+
+  async addComment(comment: Comment): Promise<void> {
+    await this.db.run(
+      'INSERT INTO comments (id,comment,createdAt,postID,userID) VALUES (?,?,?,?,?)',
+      comment.id,
+      comment.comment,
+      comment.createdAt,
+      comment.postID,
+      comment.userID
+    );
   }
   deleteComment(id: string): Promise<void> {
     throw new Error('Method not implemented.');
