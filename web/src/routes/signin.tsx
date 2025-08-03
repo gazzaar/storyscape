@@ -21,22 +21,7 @@ function SignIn() {
 
     try {
       // Replace this with your actual API call
-      const response = await fetch('http://localhost:3000/signin', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ login, password }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Invalid credentials');
-      }
-
-      const data = await response.json();
-
-      // Assuming your API returns { token, user }
-      signin(data.user);
+      await signin(login, password);
       navigate({ to: '/' });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');

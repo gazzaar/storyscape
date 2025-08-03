@@ -1,44 +1,79 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import type { User } from '../types';
 
+const API_URL = 'http://localhost:3000';
+
 type AuthContextType = {
   user: User | null;
-  signin: (user: User) => void;
+  signin: (login: string, password: string) => Promise<void>;
   logout: () => void;
   isLoading: boolean;
   isAuthenticated: boolean;
 };
 
+const LOCAL_STORAGE_JWT = 'jwt_token';
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('user_token');
-    if (storedUser) {
-      try {
-        setUser(JSON.parse(storedUser));
-      } catch (error) {
-        console.error('Error loading user from localStorage:', error);
-        localStorage.removeItem('user_token');
-      }
+    const jwt = localStorage.getItem(LOCAL_STORAGE_JWT) || '';
+
+    if (jwt) {
+      fetch(`${API_URL}/validatetoken`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${jwt}` },
+      })
+        .then(response => response.json())
+        .then(userData => {
+          if (userData) {
+            setUser(userData.user);
+            setIsAuthenticated(true);
+          } else {
+            localStorage.removeItem(LOCAL_STORAGE_JWT);
+          }
+        })
+        .catch(error => {
+          console.error('Error loading user from localStorage:', error);
+          localStorage.removeItem(LOCAL_STORAGE_JWT);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    } else {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   }, []);
 
-  const signin = (newUser: User) => {
-    setUser(newUser);
-    localStorage.setItem('user_token', JSON.stringify(newUser));
-  };
+  const signin = async (login: string, password: string) => {
+    // Replace with your authentication logic
+    const response = await fetch(`${API_URL}/signin`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ login, password }),
+    });
 
+    if (response.ok) {
+      const data = await response.json();
+      setUser(data.user);
+      setIsAuthenticated(true);
+      // Store token for persistence
+      localStorage.setItem(LOCAL_STORAGE_JWT, data.jwt);
+    } else {
+      throw new Error('Authentication failed');
+    }
+  };
   const logout = () => {
     setUser(null);
-    localStorage.removeItem('user_token');
+    setIsAuthenticated(false);
+    localStorage.removeItem(LOCAL_STORAGE_JWT);
   };
 
-  const isAuthenticated = !!user;
+  // const isAuthenticated = !!user;
   return (
     <AuthContext.Provider value={{ user, isLoading, isAuthenticated, signin, logout }}>
       {children}
