@@ -4,15 +4,16 @@ import { useState } from 'react';
 import { useAuth } from '../auth/AuthContext';
 import { AuthRoute } from '../components/AuthRoute';
 
-export const Route = createFileRoute('/signin')({
-  component: SignIn,
+export const Route = createFileRoute('/signup')({
+  component: SignUp,
 });
 
-function SignIn() {
-  const [login, setLogin] = useState('');
+function SignUp() {
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const { signin } = useAuth();
+  const { signup } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -20,9 +21,8 @@ function SignIn() {
     setError('');
 
     try {
-      // Replace this with your actual API call
-      await signin(login, password);
-      navigate({ to: '/' });
+      await signup(username, email, password);
+      navigate({ to: '/signin' });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     }
@@ -47,7 +47,7 @@ function SignIn() {
           }}
         >
           <Typography variant='h4' component='h1' gutterBottom align='center'>
-            Sign In
+            Sign Up
           </Typography>
 
           {error && (
@@ -66,8 +66,20 @@ function SignIn() {
               name='email'
               autoComplete='email'
               autoFocus
-              value={login}
-              onChange={e => setLogin(e.target.value)}
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+            />
+
+            <TextField
+              margin='normal'
+              required
+              fullWidth
+              id='username'
+              label='username'
+              name='username'
+              autoFocus
+              value={username}
+              onChange={e => setUsername(e.target.value)}
             />
             <TextField
               margin='normal'
@@ -82,7 +94,7 @@ function SignIn() {
               onChange={e => setPassword(e.target.value)}
             />
             <Button type='submit' fullWidth variant='contained' sx={{ mt: 3, mb: 2 }}>
-              Sign In
+              Sign Up
             </Button>
           </Box>
         </Paper>

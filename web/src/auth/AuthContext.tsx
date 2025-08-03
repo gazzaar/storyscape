@@ -6,6 +6,7 @@ const API_URL = 'http://localhost:3000';
 type AuthContextType = {
   user: User | null;
   signin: (login: string, password: string) => Promise<void>;
+  signup: (username: string, email: string, password: string) => Promise<void>;
   logout: () => void;
   isLoading: boolean;
   isAuthenticated: boolean;
@@ -68,6 +69,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       throw new Error('Authentication failed');
     }
   };
+
+  const signup = async (username: string, email: string, password: string) => {
+    const response = await fetch(`${API_URL}/signup`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, email, password }),
+    });
+
+    if (response.ok) {
+    } else {
+      throw new Error('Sign up failed');
+    }
+  };
+
   const logout = () => {
     setUser(null);
     setIsAuthenticated(false);
@@ -76,7 +91,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // const isAuthenticated = !!user;
   return (
-    <AuthContext.Provider value={{ user, isLoading, isAuthenticated, signin, logout }}>
+    <AuthContext.Provider value={{ user, isLoading, isAuthenticated, signin, logout, signup }}>
       {children}
     </AuthContext.Provider>
   );
