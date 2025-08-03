@@ -28,6 +28,14 @@ export type SignInResponse = {
   jwt: string;
 };
 
+export interface ValidateTokenRequest {
+  jwt: string;
+}
+
+export type ValidateTokenResponse = {
+  user: Omit<User, 'password'>;
+  jwt: string;
+};
 export interface ListCommentsRequest {}
 
 export interface ListCommentsResponse {

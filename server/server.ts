@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import { createPostHandler, listPostsHandler } from './handlers/postHandler';
 import { initDB } from './datastore';
-import { signInHandler, signUpHandler } from './handlers/authHandler';
+import { signInHandler, signUpHandler, validateToken } from './handlers/authHandler';
 import { requestloggerMiddleware } from './middleware/loggerMiddleware';
 import { errHandler } from './middleware/errorMiddleware';
 import dotenv from 'dotenv';
@@ -22,6 +22,8 @@ import { createCommentHandler, listCommentsHandler } from './handlers/commentHan
   app.get('/healthz', (req, res) => res.send({ status: 'OK' }));
   app.post('/signup', signUpHandler);
   app.post('/signin', signInHandler);
+
+  app.post('/validatetoken', validateToken);
 
   app.use(authMiddleware);
 

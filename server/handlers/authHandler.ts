@@ -1,5 +1,12 @@
-import { SignInRequest, SignInResponse, SignUpRequest, SignUpResponse } from '../api';
-import { signJwt } from '../auth';
+import {
+  SignInRequest,
+  SignInResponse,
+  SignUpRequest,
+  SignUpResponse,
+  ValidateTokenRequest,
+  ValidateTokenResponse,
+} from '../api';
+import { signJwt, verifyJwt } from '../auth';
 import { db } from '../datastore';
 import { ExpressHandler, User } from '../types';
 import crypto from 'crypto';
@@ -60,3 +67,33 @@ export const signUpHandler: ExpressHandler<SignUpRequest, SignUpResponse> = asyn
 function hashPassword(password: string): string {
   return crypto.pbkdf2Sync(password, process.env.PASSWORD_SALT!, 42, 64, 'sha512').toString('hex');
 }
+
+export const validateToken: ExpressHandler<ValidateTokenRequest, ValidateTokenResponse> = async (
+  req,
+  res
+) => {
+  const token = req.headers.authorization?.split(' ')[1];
+  if (!token) {
+    return res.sendStatus(401);
+  }
+
+  try {
+    const payload = verifyJwt(token);
+    const user = await db.getUserById(payload.userId);
+
+    if (!user) {
+      throw 'not found';
+    }
+
+    return res.status(200).send({
+      user: {
+        email: user.email,
+        id: user.id,
+        username: user.username,
+      },
+      jwt: token,
+    });
+  } catch {
+    return res.status(401).send({ error: 'Bad Token' });
+  }
+};
