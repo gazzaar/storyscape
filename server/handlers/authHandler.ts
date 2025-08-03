@@ -72,7 +72,7 @@ export const validateToken: ExpressHandler<ValidateTokenRequest, ValidateTokenRe
   req,
   res
 ) => {
-  const token = req.headers.authorization?.split(' ')[1];
+  const token = req.body.jwt;
   if (!token) {
     return res.sendStatus(401);
   }

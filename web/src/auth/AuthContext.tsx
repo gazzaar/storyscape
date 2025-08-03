@@ -26,7 +26,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (jwt) {
       fetch(`${API_URL}/validatetoken`, {
         method: 'POST',
-        headers: { Authorization: `Bearer ${jwt}` },
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ jwt }),
       })
         .then(response => response.json())
         .then(userData => {
