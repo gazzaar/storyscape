@@ -1,4 +1,6 @@
 import {
+  GetUserRequest,
+  GetUserResponse,
   SignInRequest,
   SignInResponse,
   SignUpRequest,
@@ -61,6 +63,27 @@ export const signUpHandler: ExpressHandler<SignUpRequest, SignUpResponse> = asyn
   const jwt = signJwt({ userId: user.id });
   return res.status(200).send({
     jwt,
+  });
+};
+
+// Get User
+export const getUser: ExpressHandler<GetUserRequest, GetUserResponse> = async (req, res) => {
+  const userId = req.body.userId;
+  if (!userId) {
+    return res.sendStatus(400);
+  }
+  const user = await db.getUserById(userId);
+
+  if (!user) {
+    return res.status(400).send({ error: 'User not found' });
+  }
+
+  res.status(200).send({
+    user: {
+      email: user.email,
+      id: user.id,
+      username: user.username,
+    },
   });
 };
 

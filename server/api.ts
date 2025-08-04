@@ -28,6 +28,14 @@ export type SignInResponse = {
   jwt: string;
 };
 
+export interface GetUserRequest {
+  userId: string;
+}
+
+export interface GetUserResponse {
+  user: Omit<User, 'password'>;
+}
+
 export interface ValidateTokenRequest {
   jwt: string;
 }

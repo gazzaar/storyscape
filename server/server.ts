@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import { createPostHandler, listPostsHandler } from './handlers/postHandler';
 import { initDB } from './datastore';
-import { signInHandler, signUpHandler, validateToken } from './handlers/authHandler';
+import { getUser, signInHandler, signUpHandler, validateToken } from './handlers/authHandler';
 import { requestloggerMiddleware } from './middleware/loggerMiddleware';
 import { errHandler } from './middleware/errorMiddleware';
 import dotenv from 'dotenv';
@@ -31,6 +31,8 @@ import { createCommentHandler, listCommentsHandler } from './handlers/commentHan
   app.get('/posts', listPostsHandler);
   app.post('/posts', createPostHandler);
 
+  // User
+  app.post('/user', getUser);
   // Comments
   app.get('/comments/:postId', listCommentsHandler);
   app.post('/comments/:postId', createCommentHandler);
