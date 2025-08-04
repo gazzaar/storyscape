@@ -61,6 +61,7 @@ function Posts() {
             {posts.map(post => (
               <Post
                 key={post.id}
+                id={post.id}
                 title={post.title}
                 userId={post.userID}
                 createdAt={post.createdAt}
