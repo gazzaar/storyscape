@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { createPostHandler, listPostsHandler } from './handlers/postHandler';
+import { createPostHandler, getPostHandler, listPostsHandler } from './handlers/postHandler';
 import { initDB } from './datastore';
 import { getUser, signInHandler, signUpHandler, validateToken } from './handlers/authHandler';
 import { requestloggerMiddleware } from './middleware/loggerMiddleware';
@@ -30,6 +30,7 @@ import { createCommentHandler, listCommentsHandler } from './handlers/commentHan
   // protected
   app.get('/posts', listPostsHandler);
   app.post('/posts', createPostHandler);
+  app.get('/posts/:postId', getPostHandler);
 
   // User
   app.post('/user', getUser);

@@ -10,7 +10,7 @@ export interface CreatePostResponse {}
 
 export interface GetPostRequest {}
 export interface GetPostResponse {
-  post: Post;
+  post: Omit<Post, 'published'>;
 }
 
 export type SignUpRequest = Omit<User, 'id'>;
