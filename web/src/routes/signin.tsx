@@ -11,21 +11,17 @@ export const Route = createFileRoute('/signin')({
 function SignIn() {
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
   const { signin } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
 
     try {
       // Replace this with your actual API call
-      await signin(login, password);
+      await signin.mutateAsync({ login, password });
       navigate({ to: '/' });
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
-    }
+    } catch (err) {}
   };
 
   return (
@@ -50,9 +46,9 @@ function SignIn() {
             Sign In
           </Typography>
 
-          {error && (
+          {signin.isError && (
             <Alert severity='error' sx={{ mb: 2 }}>
-              {error}
+              {signin.isError}
             </Alert>
           )}
 

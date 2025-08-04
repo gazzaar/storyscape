@@ -1,5 +1,5 @@
 import { Alert, Box, Button, Paper, TextField, Typography } from '@mui/material';
-import { createFileRoute, useNavigate } from '@tanstack/react-router';
+import { createFileRoute } from '@tanstack/react-router';
 import { useState } from 'react';
 import { useAuth } from '../auth/AuthContext';
 import { AuthRoute } from '../components/AuthRoute';
@@ -12,20 +12,14 @@ function SignUp() {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
   const { signup } = useAuth();
-  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
 
     try {
-      await signup(username, email, password);
-      navigate({ to: '/signin' });
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
-    }
+      await signup.mutateAsync({ username, email, password });
+    } catch (err) {}
   };
 
   return (
@@ -50,9 +44,9 @@ function SignUp() {
             Sign Up
           </Typography>
 
-          {error && (
+          {signup.isError && (
             <Alert severity='error' sx={{ mb: 2 }}>
-              {error}
+              {'Sign up failed'}
             </Alert>
           )}
 

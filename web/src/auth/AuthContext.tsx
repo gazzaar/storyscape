@@ -1,12 +1,21 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { User } from '../types';
 import { API_URL } from '../config';
 
 type AuthContextType = {
   user: User | null | undefined;
-  signin: (login: string, password: string) => Promise<void>;
-  signup: (username: string, email: string, password: string) => Promise<void>;
+  signin: ReturnType<
+    typeof useMutation<{ jwt: string; user: User }, Error, { login: string; password: string }>
+  >;
+  signup: ReturnType<
+    typeof useMutation<
+      { jwt: string },
+      Error,
+      { username: string; email: string; password: string }
+    >
+  >;
+
   logout: () => void;
   isLoading: boolean;
   isAuthenticated: boolean;
@@ -21,16 +30,9 @@ export const getJwtToken = () => {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // const [user, setUser] = useState<User | null>(null);
-  // const [isAuthenticated, setIsAuthenticated] = useState(false);
-  // const [isLoading, setIsLoading] = useState(true);
   const queryClient = useQueryClient();
 
-  const {
-    data: user,
-    isLoading,
-    error,
-  } = useQuery<User | null, Error>({
+  const { data: user, isLoading } = useQuery<User | null, Error>({
     queryKey: ['validateToken'],
     queryFn: async () => {
       const jwt = getJwtToken();
@@ -57,39 +59,62 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const isAuthenticated = !!user;
 
-  const signin = async (login: string, password: string) => {
-    const response = await fetch(`${API_URL}/signin`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ login, password }),
-    });
+  const signin = useMutation({
+    mutationFn: async ({ login, password }: { login: string; password: string }) => {
+      const response = await fetch(`${API_URL}/signin`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ login, password }),
+      });
 
-    if (!response.ok) {
-      throw new Error('Authentication failed');
-    }
+      if (!response.ok) {
+        throw new Error('Auth failed');
+      }
 
-    const data = await response.json();
-    localStorage.setItem(LOCAL_STORAGE_JWT, data.jwt);
-    // Invalidate query to refetch user data
-    queryClient.invalidateQueries({ queryKey: ['validateToken'] });
-  };
+      const data = await response.json();
+      return data;
+    },
 
-  const signup = async (username: string, email: string, password: string) => {
-    const response = await fetch(`${API_URL}/signup`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, email, password }),
-    });
+    onSuccess: data => {
+      localStorage.setItem(LOCAL_STORAGE_JWT, data.jwt);
 
-    if (!response.ok) {
-      throw new Error('Sign up failed');
-    }
+      if (data.user) {
+        queryClient.setQueryData(['validateToken'], data.user);
+      } else {
+        queryClient.invalidateQueries({ queryKey: ['validateToken'] });
+      }
+    },
+  });
 
-    const data = await response.json();
-    localStorage.setItem(LOCAL_STORAGE_JWT, data.jwt);
-    // Invalidate query to refetch user data
-    queryClient.invalidateQueries({ queryKey: ['validateToken'] });
-  };
+  const signup = useMutation({
+    mutationFn: async ({
+      username,
+      email,
+      password,
+    }: {
+      username: string;
+      email: string;
+      password: string;
+    }) => {
+      const response = await fetch(`${API_URL}/signup`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, email, password }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Sign up failed');
+      }
+
+      const data = await response.json();
+      return data;
+    },
+    onSuccess: data => {
+      localStorage.setItem(LOCAL_STORAGE_JWT, data.jwt);
+
+      queryClient.invalidateQueries({ queryKey: ['validateToken'] });
+    },
+  });
 
   const logout = () => {
     localStorage.removeItem(LOCAL_STORAGE_JWT);
