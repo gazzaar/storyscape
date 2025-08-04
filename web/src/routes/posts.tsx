@@ -3,8 +3,9 @@ import { ProtectedRoute } from '../components/ProtectedRoute';
 import { useEffect, useState } from 'react';
 import { useAuth, getJwtToken } from '../auth/AuthContext';
 import { API_URL } from '../config';
-import { CircularProgress, dividerClasses, Typography } from '@mui/material';
+import { CircularProgress, Container, dividerClasses, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
+import { Post } from '../components/Post.tsx';
 
 export const Route = createFileRoute('/posts')({
   component: Posts,
@@ -56,12 +57,17 @@ function Posts() {
         ) : isError ? (
           <Typography color='error'>Error fetching posts: {error?.message}</Typography>
         ) : posts && posts.length > 0 ? (
-          posts.map(post => (
-            <div key={post.id}>
-              <h1>{post.title}</h1>
-              <p>{post.message}</p>
-            </div>
-          ))
+          <Container sx={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            {posts.map(post => (
+              <Post
+                key={post.id}
+                title={post.title}
+                userId={post.userID}
+                createdAt={post.createdAt}
+                message={post.message}
+              />
+            ))}{' '}
+          </Container>
         ) : (
           <Typography>No posts available</Typography>
         )}
