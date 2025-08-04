@@ -29,6 +29,10 @@ A modern blog platform built with React and Node.js for sharing thoughts and ide
 - JWT authentication
 - Pino for structured logging
 
+### Docs
+
+- see [./docs/]
+
 ## Getting Started
 
 ### Prerequisites
