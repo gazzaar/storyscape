@@ -31,7 +31,7 @@ A modern blog platform built with React and Node.js for sharing thoughts and ide
 
 ### Docs
 
-- see [./docs/]
+- see [docs](./docs/)
 
 ## Getting Started
 
