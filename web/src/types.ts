@@ -5,6 +5,7 @@ export interface User {
 }
 
 export interface Post {
+  id: string;
   title: string;
   message: string;
   createdAt: number;
@@ -13,6 +14,7 @@ export interface Post {
 }
 
 export interface Comment {
+  id: string;
   comment: string;
   createdAt: number;
   postID: string;
