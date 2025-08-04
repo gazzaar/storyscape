@@ -57,38 +57,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const isAuthenticated = !!user;
 
-  // useEffect(() => {
-  //   const jwt = getJWtToekn();
-  //
-  //   if (jwt) {
-  //     fetch(`${API_URL}/validatetoken`, {
-  //       method: 'POST',
-  //       headers: { 'Content-Type': 'application/json' },
-  //       body: JSON.stringify({ jwt }),
-  //     })
-  //       .then(response => response.json())
-  //       .then(userData => {
-  //         if (userData) {
-  //           setUser(userData.user);
-  //           setIsAuthenticated(true);
-  //         } else {
-  //           localStorage.removeItem(LOCAL_STORAGE_JWT);
-  //         }
-  //       })
-  //       .catch(error => {
-  //         console.error('Error loading user from localStorage:', error);
-  //         localStorage.removeItem(LOCAL_STORAGE_JWT);
-  //       })
-  //       .finally(() => {
-  //         setIsLoading(false);
-  //       });
-  //   } else {
-  //     setIsLoading(false);
-  //   }
-  // }, []);
-
   const signin = async (login: string, password: string) => {
-    // Replace with your authentication logic
     const response = await fetch(`${API_URL}/signin`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -128,7 +97,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     queryClient.invalidateQueries({ queryKey: ['validateToken'] });
   };
 
-  // const isAuthenticated = !!user;
   return (
     <AuthContext.Provider value={{ user, isLoading, isAuthenticated, signin, logout, signup }}>
       {children}

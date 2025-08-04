@@ -14,26 +14,32 @@ export const Header = () => {
   return (
     <Stack
       sx={{ display: 'flex', justifyContent: 'space-between', m: 2, alignItems: 'center' }}
-      direction="row"
+      direction='row'
     >
       <h1>StorySpace</h1>
       <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
         {isAuthenticated ? (
           <>
             <span>Welcome, {user?.username}!</span>
-            <Button variant="outlined" onClick={handleLogout} sx={{ textTransform: 'none' }}>
+            <Button variant='outlined' onClick={handleLogout} sx={{ textTransform: 'none' }}>
               Logout
             </Button>
+
+            <Link to='/posts'>
+              <Button variant='contained' sx={{ textTransform: 'none' }}>
+                Posts
+              </Button>
+            </Link>
           </>
         ) : (
           <>
-            <Link to="/signin">
-              <Button variant="text" sx={{ textTransform: 'none' }}>
+            <Link to='/signin'>
+              <Button variant='text' sx={{ textTransform: 'none' }}>
                 SignIn
               </Button>
             </Link>
-            <Link to="/signup">
-              <Button variant="contained" sx={{ textTransform: 'none' }}>
+            <Link to='/signup'>
+              <Button variant='contained' sx={{ textTransform: 'none' }}>
                 SignUp
               </Button>
             </Link>
