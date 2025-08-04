@@ -62,7 +62,7 @@ export class SqlDataStore implements Datastore {
   async getPost(id: string): Promise<Post | undefined> {
     return await this.db.get<Post>(
       `
-        SELECT 1 FROM  posts WHERE id = ?`,
+        SELECT * FROM  posts WHERE id = ?`,
       id
     );
   }
