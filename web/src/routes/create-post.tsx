@@ -5,6 +5,7 @@ import { Box, Paper, Typography, Alert, TextField, Button, TextareaAutosize } fr
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { getJwtToken } from '../auth/AuthContext';
 import { API_URL } from '../config';
+import '../styles/text-area.css';
 
 export const Route = createFileRoute('/create-post')({
   component: CreatePostRoute,
@@ -18,6 +19,10 @@ function CreatePostRoute() {
   const createPost = useMutation({
     mutationFn: async ({ title, message }: { title: string; message: string }) => {
       const jwt = getJwtToken();
+
+      if (!jwt) {
+        throw Error('Invalid Token');
+      }
       const response = await fetch(`${API_URL}/posts`, {
         method: 'POST',
         headers: {
@@ -28,7 +33,7 @@ function CreatePostRoute() {
       });
 
       if (!response.ok) {
-        throw new Error('Invalid token');
+        throw new Error('Failed to create post');
       }
     },
     onSuccess: () => {
@@ -81,16 +86,7 @@ function CreatePostRoute() {
               required
               aria-label='post-text'
               placeholder='your post here....'
-              style={{
-                background: 'none',
-                width: '100%',
-                minHeight: 100,
-                maxHeight: '300px',
-                resize: 'vertical',
-                color: '#333',
-                padding: '.6rem 0 ',
-                fontFamily: 'inherit',
-              }}
+              className='textarea-post'
               name='message'
               id='password'
               value={message}
