@@ -1,12 +1,12 @@
 import { Box, Container, Typography } from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
-import { API_URL } from '../config';
-import { getJwtToken } from '../auth/AuthContext';
-import type { User } from '../types';
+import { Link } from '@tanstack/react-router';
+import { useGetUser } from '../hooks/useGetUser';
+import '../styles/link.css';
 
 export const Post = ({
   userId,
   title,
+  id,
   createdAt,
   message,
 }: {
@@ -14,77 +14,50 @@ export const Post = ({
   title: string;
   message: string;
   createdAt: number;
+  id: string;
 }) => {
   const { user, error, isLoading } = useGetUser(userId);
   const userName = isLoading || !user ? '...' : error ? '<unknown>' : user.username;
 
   const date = new Date(createdAt);
+  let shortened = message.length > 30 ? message.slice(0, 30) + '...' : message;
   return (
     <Container
       sx={{
-        border: '1px solid #333',
-        cursor: 'pointer',
+        border: '1px solid #5d5d5d',
         p: '0.8rem 1.2rem',
+        borderRadius: '6px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
       }}
     >
-      <Container>
-        <Typography variant='h4' sx={{ fontSize: '1.8rem' }}>
-          {title}
+      <Box>
+        <Link
+          to={'/post/$postId'}
+          params={{ postId: id }}
+          className='link link-container'
+          style={{ textDecoration: 'none' }}
+        >
+          <Typography variant='h4' sx={{ fontSize: '1.8rem', mb: '.5rem', color: '#f6f6f6' }}>
+            {title}
+          </Typography>
+        </Link>
+        <Typography variant='body2' sx={{ color: '#b0b0b0', fontSize: '1.4rem', mb: '1rem' }}>
+          {shortened}
         </Typography>
-        <Typography variant='body2' sx={{ color: 'gray', fontSize: '1.4rem' }}>
-          {message}
+        <Typography
+          sx={{
+            color: 'gray',
+            display: 'inline-block',
+          }}
+        >
+          {date.toLocaleString()}
         </Typography>
-        <Typography>{date.toLocaleString()}</Typography>
-      </Container>
-      <Typography>{userName}</Typography>
+      </Box>
+      <Typography sx={{ display: 'inline-block', fontWeight: '600', color: '#d1d1d1' }}>
+        {userName}
+      </Typography>
     </Container>
   );
-};
-
-interface UseGetUserResult {
-  user: User | null | undefined;
-  error: Error | null;
-  isLoading: boolean;
-}
-
-const useGetUser = (userId: string): UseGetUserResult => {
-  const {
-    data: user,
-    error,
-    isLoading,
-  } = useQuery<User | null, Error>({
-    queryKey: ['user', userId],
-    queryFn: async () => {
-      const jwt = getJwtToken();
-      if (!jwt) {
-        throw new Error('No JWT token found');
-      }
-
-      const response = await fetch(`${API_URL}/user`, {
-        method: 'POST', // Use GET for fetching data
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ userId }),
-      });
-
-      if (!response.ok) {
-        throw new Error('User not found');
-      }
-
-      const data = await response.json();
-      // Validate response structure
-      if (!data || !data.user) {
-        throw new Error('Invalid response format');
-      }
-
-      return data.user as User;
-    },
-  });
-
-  return { user, error, isLoading };
 };
