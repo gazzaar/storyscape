@@ -1,0 +1,17 @@
+.link {
+  color: #eee;
+}
+
+.link-conatiner {
+  display: flex;
+  align-items: center;
+}
+.link:active,
+.link:visited,
+.link:focus {
+  color: #eee;
+}
+
+.link:hover {
+  color: #aaa;
+}
