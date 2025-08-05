@@ -44,7 +44,7 @@ export class SqlDataStore implements Datastore {
   }
 
   listPosts(): Promise<Post[]> {
-    return this.db.all<Post[]>('SELECT * FROM posts');
+    return this.db.all<Post[]>('SELECT * FROM posts ORDER BY createdAT DESC');
   }
 
   async createPost(post: Post): Promise<void> {
