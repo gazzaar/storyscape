@@ -1,5 +1,5 @@
 import { Box, Button, Paper, Typography } from '@mui/material';
-import { createFileRoute, Link } from '@tanstack/react-router';
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
 import { useAuth } from '../auth/AuthContext';
 
 export const Route = createFileRoute('/')({
@@ -8,7 +8,17 @@ export const Route = createFileRoute('/')({
 
 function Index() {
   const { isAuthenticated, user } = useAuth();
+  const navigate = useNavigate();
 
+  if (!isAuthenticated) {
+    navigate({ to: '/signin', replace: true });
+    return null;
+  }
+
+  if (isAuthenticated) {
+    navigate({ to: '/posts' });
+    return null;
+  }
   return (
     <Box sx={{ p: 3 }}>
       <Typography variant='h4' gutterBottom>
@@ -22,6 +32,7 @@ function Index() {
             <Typography variant='body1' sx={{ mt: 2 }}>
               You are successfully authenticated.
             </Typography>
+            <Link to='/create-post'>Create new Post</Link>
           </Box>
         ) : (
           <Box>
