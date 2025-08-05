@@ -1,6 +1,7 @@
 import { Box, Button, Stack } from '@mui/material';
 import { Link, useNavigate } from '@tanstack/react-router';
 import { useAuth } from '../auth/AuthContext';
+import '../styles/link.css';
 
 export const Header = () => {
   const { isAuthenticated, user, logout } = useAuth();
@@ -16,7 +17,9 @@ export const Header = () => {
       sx={{ display: 'flex', justifyContent: 'space-between', m: 2, alignItems: 'center' }}
       direction='row'
     >
-      <h1>StorySpace</h1>
+      <Link to='/' className='link' style={{ textDecoration: 'none' }}>
+        <h1>StorySpace</h1>
+      </Link>
       <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
         {isAuthenticated ? (
           <>
@@ -28,6 +31,12 @@ export const Header = () => {
             <Link to='/posts'>
               <Button variant='contained' sx={{ textTransform: 'none' }}>
                 Posts
+              </Button>
+            </Link>
+
+            <Link to='/create-post'>
+              <Button variant='contained' sx={{ textTransform: 'none' }}>
+                new Post
               </Button>
             </Link>
           </>
