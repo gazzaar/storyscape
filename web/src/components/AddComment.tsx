@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { getJwtToken } from '../auth/AuthContext';
 import { API_URL } from '../config';
+import '../styles/text-area.css';
 
 export const AddComment = ({ postId }: { postId: string }) => {
   const [comment, setComment] = useState('');
@@ -35,29 +36,26 @@ export const AddComment = ({ postId }: { postId: string }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     createComment.mutateAsync({ comment });
+    setComment('');
   };
   return (
-    <Box component='form' onSubmit={handleSubmit}>
+    <Box
+      component='form'
+      onSubmit={handleSubmit}
+      sx={{ display: 'flex', alignItems: 'center', gap: '2rem' }}
+    >
       <TextareaAutosize
         required
         aria-label='post-text'
         placeholder='Add your thoughts on that..'
-        style={{
-          background: 'none',
-          width: '100%',
-          minHeight: 100,
-          maxHeight: '300px',
-          resize: 'vertical',
-          padding: '.6rem 0 ',
-          fontFamily: 'inherit',
-        }}
+        className='textarea'
         name='message'
         id='password'
         value={comment}
         onChange={e => setComment(e.target.value)}
       />
 
-      <Button type='submit' fullWidth variant='contained' sx={{ mt: 3, mb: 2 }}>
+      <Button type='submit' variant='contained' sx={{}}>
         Add Comment{' '}
       </Button>
     </Box>
