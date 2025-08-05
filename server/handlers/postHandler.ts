@@ -21,7 +21,7 @@ export const createPostHandler: ExpressHandler<CreatePostRequest, CreatePostResp
   req,
   res
 ) => {
-  if (!req.body.title || !req.body.message || !req.body.published) {
+  if (!req.body.title || !req.body.message) {
     return res.sendStatus(400);
   }
 
@@ -31,7 +31,7 @@ export const createPostHandler: ExpressHandler<CreatePostRequest, CreatePostResp
     title: req.body.title,
     message: req.body.message,
     userID: res.locals.userId,
-    published: req.body.published,
+    published: true,
   };
 
   await db.createPost(post);

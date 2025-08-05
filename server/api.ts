@@ -5,7 +5,7 @@ export interface ListPostRequest {}
 export interface ListPostResponse {
   posts: Post[];
 }
-export type CreatePostRequest = Omit<Post, 'id' | 'createdAt' | 'userID'>;
+export type CreatePostRequest = Omit<Post, 'id' | 'createdAt' | 'userID' | 'published'>;
 export interface CreatePostResponse {}
 
 export interface GetPostRequest {}
